@@ -12,7 +12,11 @@
         inherit (nixpkgs.lib) optionals;
         pkgs = import nixpkgs { inherit system; };
 
-        elixir = pkgs.beam.packages.erlang.elixir;
+        erlang = pkgs.erlangR25.override {
+          opensslPackage = pkgs.libressl;
+        };
+        beamPkg = pkgs.beam.packagesWith erlang;
+        elixir = beamPkg.elixir_1_14;
         locales = if pkgs.stdenv.hostPlatform.libc == "glibc" then
           pkgs.glibcLocales.override {
             allLocales = false; # Only en-US utf8
