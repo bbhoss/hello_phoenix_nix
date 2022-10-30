@@ -9,7 +9,7 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        inherit (nixpkgs.lib) optional;
+        inherit (nixpkgs.lib) optionals;
         pkgs = import nixpkgs { inherit system; };
 
         elixir = pkgs.beam.packages.erlang.elixir;
@@ -22,7 +22,7 @@
       in {
         devShells.default = pkgs.mkShell {
           buildInputs = [ pkgs.postgresql_15 elixir locales ]
-            ++ pkgs.lib.optionals pkgs.stdenv.isDarwin
+            ++ optionals pkgs.stdenv.isDarwin
             (with pkgs.darwin.apple_sdk.frameworks; [ Cocoa CoreServices ]);
         };
       });
